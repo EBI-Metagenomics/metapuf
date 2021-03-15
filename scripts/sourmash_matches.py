@@ -54,9 +54,7 @@ def dir_path(string):
 
 def main(argv=None):
     """
-    Allows to form clusters of highly related genomes, select one represenattive
-    from each genome and avoid redundancy.
-
+    Computes sourmash signatures and performs search for best match in reference databasesa
     """
     program_name = os.path.basename(sys.argv[0])
     if argv is None:
@@ -66,7 +64,7 @@ def main(argv=None):
 
     try:
         parser = ArgumentParser(
-            description='Generate SNP distance matrix and k-mer database from all reference genomes')
+            description='Find matches from reference database based on sourmash signatures')
 
         parser.add_argument('--ref_dir',  type=dir_path, required=True,
                             help='path of the directory with all the reference genomes')

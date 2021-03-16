@@ -4,10 +4,9 @@ import os
 import sys
 import subprocess
 import glob
+import time
 from traceback import format_exc
 from argparse import ArgumentParser
-
-
 
 def sourmash_sig(file_name: str, out_file: str, k_size: str, scale: str):
     """
@@ -18,7 +17,6 @@ def sourmash_sig(file_name: str, out_file: str, k_size: str, scale: str):
     :param scale: scaling factor, the default value is 1000
 
     """
-    print("computing sourmash signatures ....")
     cmd_sig = "  ".join(["sourmash compute -k ", k_size, " --scaled ", scale, " --track-abundance -o ", out_file, file_name])
     subprocess.call(cmd_sig, shell=True)
 
@@ -28,7 +26,6 @@ def signature_index(k_size: str, file_list: list, file_list_len: str):
     :param file_list: list of genome names
     :param k_size: size of k-mer, the default value being 31
     """
-    print("computing sourmash index....")
     cmd_index = "  ".join(["sourmash index -k ", k_size, " genome_index_"+file_list_len , file_list])
     subprocess.call(cmd_index, shell=True)
 
@@ -40,7 +37,6 @@ def sourmash_gather(w_dir: str, k_size: str, query: str, index_file: str):
     :param query: file path of the query signature file
     :param index_file: file path for index of all reference genomes
     """
-    print("finding best matches using sourmash......")
     csv_out = os.path.join(w_dir, query+".csv")
     sm_out = os.path.join(w_dir, query+".sm")
     cmd_gather = "  ".join(["sourmash gather -k ", k_size, query, index_file, " -o ", csv_out , " > ", sm_out])
@@ -73,7 +69,7 @@ def main(argv=None):
         parser.add_argument('--k_size', type=str, required=False,
                             help='enter any k-size 21,31 or 51', default='31')
         parser.add_argument('--scale', type=str, required=False, help='enter any scaling factor ', default='1000')
-
+        starttime = time.time()
         args = parser.parse_args()
         #directory that conatins all reference signatures
         signature_list=[]
@@ -86,7 +82,7 @@ def main(argv=None):
             p=subprocess.Popen(' '.join(['mkdir ', query_sig]), shell = True)
         #reference signatures
         for file in os.listdir(args.ref_dir):
-            if file.endswith(".fa"):
+            if (file.endswith(".fa")) or (file.endswith(".fasta")):
                 ref_name = os.path.join(args.ref_dir, file)
                 basename = file.split(".")[0]
                 out_ref = os.path.join(sig_dir, basename+".sig")
@@ -97,7 +93,7 @@ def main(argv=None):
                     continue
         # query signatures
         for file in os.listdir(args.query_dir):
-            if file.endswith(".fasta"):
+            if (file.endswith(".fasta")) or (file.endswith(".fa")):
                 query_name = os.path.join(args.query_dir, file)
                 basename = file.split(".")[0]
                 out_query= os.path.join(query_sig, basename+".sig")
@@ -131,10 +127,10 @@ def main(argv=None):
                 q_file = os.path.join(query_sig, file)
                 if q_file.endswith(".sig"):
                     sourmash_gather(query_sig, args.k_size, q_file, index_file)
-
-    except Exception as e:
-        print(program_name + ": " + repr(e) + '\n' + format_exc() + '\n')
-        raise(e)
+        print('That took {} seconds'.format(time.time() - starttime))
+    except Exception as error:
+        print(program_name + ": " + repr(error) + '\n' + format_exc() + '\n')
+        raise error
 
 
 if __name__ == "__main__":

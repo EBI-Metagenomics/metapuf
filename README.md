@@ -25,11 +25,12 @@ Metadata file contains all the information about the genomes and can be found at
 
 ### Usage
 The signature file for UHGG catalogue can be found /ebi/ftp/pub/databases/metagenomics/metapuf/UHGG_catalogue. The workflow assumes that the reference signatures are already present.
+
 #### run run_task.py to generate a protein database with unique sequences
-- run_task.py  --ref_dir {path of ref genome signatures} --query_dir {path for query genomes} --k_size {default 31} --scale {default 1000} --contig_dir {path for contigs directory} --metadata {path for metadata}
+- run_task.py  --ref_dir {path of ref genome signatures} --query_dir {path for query genomes} --k_size {optional, default 31} --scale {optional, default 1000} --contig_dir {path for contigs directory} --metadata {path for metadata}
 
 #### run mmseqs-wf.sh to generate clusters. Create an output foler to save reults
 
-- mmseqs_wf.sh -t {no of threads} -f {input protein file} -i {amino acid identity} -c {sequence identity} -o {output_folder}"
+- mmseqs_wf.sh -t {no of threads} -f {input protein file} -i {amino acid identity} -c {sequence identity} -o {output_folder}
 
-- The representative sequences can be found at output_folder/mmseqs_cluster_rep.fa
+- The representative sequences are called  mmseqs_cluster_rep.fa and can be found under the folder output_folder/

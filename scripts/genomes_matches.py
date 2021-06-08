@@ -49,7 +49,8 @@ def get_genomes_from_ftp(species_names: list,  file_name:str, d_dir: str):
     for item in species_names:
         sp_name = (item.split('.')[0]).strip()
         print(sp_name)
-        ftp_dir_path = "http://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/human-gut/v1.0/uhgg_catalogue"
+        #ftp_dir_path should be changed to the location of uhgg_catalogue
+        ftp_dir_path = "./human-gut/v1.0/uhgg_catalogue"
         data = pd.read_csv(file_name,  dtype=str, sep=',')
         for i in range(len(data)):
             if sp_name == data['Species_rep'][i]:
@@ -201,8 +202,10 @@ def main(argv=None):
                     genome_path = input ("Enter the source of genomes metadata as FTP_data or EBI_internal: ")
                     if genome_path == "FTP_data":
                         get_genomes_from_ftp(unique, args.metadata, pan_genome_dir)
-                    else:
+                    if genome_path == "EBI_internal":
                         get_genomes_from_ebi(unique, args.metadata, pan_genome_dir)
+                    else:
+                        print("Genome metadata not found")
                     if not os.path.isfile(all_protein_file):
                         concat_proteins(pan_genome_dir)
                     if not os.path.isfile(contig_protein):

@@ -50,7 +50,6 @@ def get_genomes_from_ftp(species_names: list,  file_name:str, d_dir: str):
         sp_name = (item.split('.')[0]).strip()
         print(sp_name)
         ftp_dir_path = "http://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/human-gut/v1.0/uhgg_catalogue"
-        # ftp_dir_path = "/Users/kaurs/Desktop/project_files/ERP104047"
         data = pd.read_csv(file_name,  dtype=str, sep=',')
         for i in range(len(data)):
             if sp_name == data['Species_rep'][i]:

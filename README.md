@@ -8,7 +8,11 @@
 - mmseqs2
 - Biopython
 
+If you don't have conda on your computer you can install the Miniconda Python3 distribution from this link (https://conda.io/en/latest/miniconda.html). Make sure you answer yes to the question whether conda shall be put into your PATH. You will need the following channels
+a). bioconda,
+b). conda-forge
 you can create a virtual environment and install the dependencies using metapuf.yml
+- conda env create -n metapuf -f metapuf.yml
 
 The script has upper level ftp location hard coded, which can be edited. The folder structure is expected to be similar to the one in ftp location. for e.g. ../human-gut/v1.0/uhgg_catalogue/MGYG-HGUT-000/MGYG-HGUT-00002/genome/
 

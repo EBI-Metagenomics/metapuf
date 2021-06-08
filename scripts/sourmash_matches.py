@@ -112,7 +112,7 @@ def main(argv=None):
         else:
             genomes_list_len = len(os.listdir(args.dest_dir))
             index_file = os.path.join(args.dest_dir, "genome_index_"+str(genomes_list_len)+".sbt.json")
-            os .chdir(args.dest_dir)
+            os.chdir(args.dest_dir)
             signature_index(args.k_size, str(genomes_list_len), args.dest_dir)
             for file in os.listdir(query_sig):
                 q_file = os.path.join(query_sig, file)

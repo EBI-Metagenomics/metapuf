@@ -23,7 +23,7 @@ def gen_match_list(f_input: str, w_dir: str) -> list:
     :return : a list
     """
     file_name = os.path.join(w_dir, f_input)
-    logging.info("genrating matched from %s", file_name)
+    logging.info("generating matched from %s", file_name)
     data = pd.read_csv(file_name, sep=',')
     unique=set()
     match_dir ={}

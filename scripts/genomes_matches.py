@@ -3,8 +3,6 @@
 import os
 import sys
 import time
-from traceback import format_exc
-from argparse import ArgumentParser
 import shutil
 import logging
 from collections import defaultdict
@@ -161,64 +159,3 @@ def uniq_proteins(c_dir: str, assembly: str):
         unique_records[str(record.seq)].append(record.id)
     final_seq = (SeqRecord(Seq(seqi), id="|".join(gi), name='', description='') for seqi, gi in unique_records.items())
     SeqIO.write(final_seq, uniq_seqs, 'fasta')
-
-
-def main(argv=None):
-    program_name = os.path.basename(sys.argv[0])
-    if argv is None:
-        argv = sys.argv
-    else:
-        sys.argv.extend(argv)
-
-    try:
-        parser = ArgumentParser(description='extract proteins for all matching genomes from UHGG catalogue')
-
-        parser.add_argument('--wdir',  required=True, help='enter the path of the directory for all .csv files')
-
-        parser.add_argument('--contig_dir', required=True, help='path for the contigs_dir')
-
-        parser.add_argument('--metadata', required=True, help='path for file that has all genome paths, a .txt file')
-
-        args = parser.parse_args()
-
-        starttime = time.time()
-        for file in os.listdir(args.wdir):
-            if file.endswith(".csv"):
-                unique=set()
-                basename = (file.split(".")[0]).strip()
-                pan_genome_dir = os.path.join(args.wdir, basename)
-                contig_protein = os.path.join(args.contig_dir, basename+".faa")
-                all_protein_file=os.path.join(pan_genome_dir, "all_"+basename+".faa")
-                concatenated_file = os.path.join(args.contig_dir, "completed_"+basename+".faa")
-                print(pan_genome_dir )
-                if not os.path.isdir(pan_genome_dir):
-                    p=subprocess.Popen(' '.join(['mkdir', pan_genome_dir]), shell = True)
-                try:
-                    matched_sp_names = gen_match_list(file, args.wdir)
-                    for match in matched_sp_names:
-                        gen_name = match.split(".")[0]
-                        unique.add(gen_name)
-                    print(unique)
-                    genome_path = input ("Enter the source of genomes metadata as FTP_data or EBI_internal: ")
-                    if genome_path == "FTP_data":
-                        get_genomes_from_ftp(unique, args.metadata, pan_genome_dir)
-                    if genome_path == "EBI_internal":
-                        get_genomes_from_ebi(unique, args.metadata, pan_genome_dir)
-                    else:
-                        print("Genome metadata not found")
-                    if not os.path.isfile(all_protein_file):
-                        concat_proteins(pan_genome_dir)
-                    if not os.path.isfile(contig_protein):
-                        contig_prod(args.contig_dir, basename, all_protein_file)
-                    if os.path.isfile(concatenated_file):
-                        uniq_proteins(args.contig_dir, basename)
-                except Exception:
-                    continue
-        print('runtime is {} seconds'.format(time.time() - starttime))
-    except Exception as error:
-        print(program_name + ": " + repr(error) + '\n' + format_exc() + '\n')
-        raise error
-
-
-if __name__ == "__main__":
-    sys.exit(main())

@@ -24,14 +24,9 @@ Metadata file contains all the information about the genomes and can be found at
 -  if you are using conda make sure to activate the environment
 
 ### Usage
-The signature file for UHGG catalogue can be found /ebi/ftp/pub/databases/metagenomics/metapuf/UHGG_catalogue
-#### run scripts/sourmash_matches.py to query the metagenome against UHGG calatogue, generating a .csv file
-
-- sourmash_matches.py --ref_dir {path for UHGG_catalogue genomes} --dest_dir {path for saving ref genome signatures} --query_dir {path for query genomes} --k_size {default 31} --scale {default 1000}
-
-#### run genomes_matches.py to copy matching genomes and pan-genomes from ftp location
-
-- genomes_matches.py --wdir {path for all .csv files} --contig_dir {path for contigs directory} --metadata {path for metadata}
+The signature file for UHGG catalogue can be found /ebi/ftp/pub/databases/metagenomics/metapuf/UHGG_catalogue. The workflow assumes that the reference signatures are already present.
+#### run run_task.py to generate a protein database with unique sequences
+- run_task.py  --ref_dir {path of ref genome signatures} --query_dir {path for query genomes} --k_size {default 31} --scale {default 1000} --contig_dir {path for contigs directory} --metadata {path for metadata}
 
 #### run mmseqs-wf.sh to generate clusters. Create an output foler to save reults
 

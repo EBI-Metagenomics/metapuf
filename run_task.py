@@ -27,7 +27,7 @@ def main(argv=None):
 
     try:
         parser = ArgumentParser(
-            description='Generate protein sequence datanase)
+            description='Generate protein sequence datanase')
         parser.add_argument('--ref_dir',  type=dir_path, required=True,
                             help='full path of the directory with all the reference signatures')
         parser.add_argument('--query_dir',  type=dir_path, required=True,

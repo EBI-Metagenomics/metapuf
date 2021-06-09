@@ -24,12 +24,14 @@ Metadata file contains all the information about the genomes and can be found at
 -  if you are using conda make sure to activate the environment
 
 ### Usage
-The signature file for UHGG catalogue can be found /ebi/ftp/pub/databases/metagenomics/metapuf/UHGG_catalogue. The workflow assumes that the reference signatures are already present.
+The signature files for UHGG catalogue can be found (http://ftp.ebi.ac.uk/pub/databases/metagenomics/metapuf/UHGG_catalogue. The workflow assumes that the reference signatures are already present.
+
+**Warning:** The reference genome signatures have been generated using k-mer size 31 and downsampled to 1000, and therefore, the k_size and scale parameter in run_task.py should remain at default value, unless the user is interested in generating the refernce genome signatures.
 
 #### run run_task.py to generate a protein database with unique sequences
 - run_task.py  --ref_dir {path of ref genome signatures} --query_dir {path for query genomes} --k_size {optional, default 31} --scale {optional, default 1000} --contig_dir {path for contigs directory} --metadata {path for metadata}
 
-#### run mmseqs-wf.sh to generate clusters. Create an output foler to save reults
+#### run mmseqs-wf.sh to generate clusters. Create an output folder to save reults
 
 - mmseqs_wf.sh -t {no of threads} -f {input protein file} -i {amino acid identity} -c {sequence identity} -o {output_folder}
 

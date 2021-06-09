@@ -6,6 +6,7 @@ import glob
 import time
 from traceback import format_exc
 from argparse import ArgumentParser
+import subprocess
 from scripts import sourmash_matches as sm
 from scripts import genomes_matches as gm
 
@@ -35,9 +36,7 @@ def main(argv=None):
         parser.add_argument('--k_size', type=str, required=False,
                             help='enter any k-size 21,31 or 51', default='31')
         parser.add_argument('--scale', type=str, required=False, help='enter any scaling factor ', default='1000')
-        parser.add_argument('--contig_dir', required=True, help='path for the contigs_dir')
-
-        parser.add_argument('--metadata', required=True, help='path for file that has all genome paths, a .txt file')
+        parser.add_argument('--metadata', type=str, required=True, help='path for file that has all genome paths, a .txt file')
 
         starttime = time.time()
         args = parser.parse_args()
@@ -77,9 +76,9 @@ def main(argv=None):
                 unique=set()
                 basename = (file.split(".")[0]).strip()
                 pan_genome_dir = os.path.join(query_sig, basename)
-                contig_protein = os.path.join(args.contig_dir, basename+".faa")
+                contig_protein = os.path.join(args.query_dir, basename+".faa")
                 all_protein_file=os.path.join(pan_genome_dir, "all_"+basename+".faa")
-                concatenated_file = os.path.join(args.contig_dir, "completed_"+basename+".faa")
+                concatenated_file = os.path.join(args.query_dir, "completed_"+basename+".faa")
                 print(pan_genome_dir )
                 if not os.path.isdir(pan_genome_dir):
                     p=subprocess.Popen(' '.join(['mkdir', pan_genome_dir]), shell = True)
@@ -99,9 +98,9 @@ def main(argv=None):
                     if not os.path.isfile(all_protein_file):
                         gm.concat_proteins(pan_genome_dir)
                     if not os.path.isfile(contig_protein):
-                        gm.contig_prod(args.contig_dir, basename, all_protein_file)
+                        gm.contig_prod(args.query_dir, basename, all_protein_file)
                     if os.path.isfile(concatenated_file):
-                        gm.uniq_proteins(args.contig_dir, basename)
+                        gm.uniq_proteins(args.query_dir, basename)
                 except Exception:
                     continue
         print('runtime is {} seconds'.format(time.time() - starttime))

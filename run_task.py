@@ -71,6 +71,7 @@ def main(argv=None):
                 if q_file.endswith(".sig"):
                     sm.sourmash_gather(query_sig, args.k_size, q_file, index_file)
         #working with .csv files
+        genome_path = input ("Enter the source of genomes metadata as FTP_data or EBI_internal: ")
         for file in os.listdir(query_sig):
             if file.endswith(".csv"):
                 unique=set()
@@ -79,7 +80,7 @@ def main(argv=None):
                 contig_protein = os.path.join(args.query_dir, basename+".faa")
                 all_protein_file=os.path.join(pan_genome_dir, "all_"+basename+".faa")
                 concatenated_file = os.path.join(args.query_dir, "completed_"+basename+".faa")
-                print(pan_genome_dir )
+                print("This is the directory with uhgg matches ", pan_genome_dir )
                 if not os.path.isdir(pan_genome_dir):
                     p=subprocess.Popen(' '.join(['mkdir', pan_genome_dir]), shell = True)
                 try:
@@ -87,11 +88,11 @@ def main(argv=None):
                     for match in matched_sp_names:
                         gen_name = match.split(".")[0]
                         unique.add(gen_name)
-                    print(unique)
-                    genome_path = input ("Enter the source of genomes metadata as FTP_data or EBI_internal: ")
+                    print(" UHGG matches",unique)
                     if genome_path == "FTP_data":
+                        print("collecting metadata from ftp")
                         gm.get_genomes_from_ftp(unique, args.metadata, pan_genome_dir)
-                    if genome_path == "EBI_internal":
+                    elif genome_path == "EBI_internal":
                         gm.get_genomes_from_ebi(unique, args.metadata, pan_genome_dir)
                     else:
                         print("Genome metadata not found")

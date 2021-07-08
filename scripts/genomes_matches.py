@@ -57,13 +57,13 @@ def get_genomes_from_ftp(species_names: list,  file_name:str, d_dir: str):
                     uniq_sp_name.add(sp_name)
                     MGnify_acc = data['MGnify_accession'][i]
                     genome_dir_path = ftp_dir_path+"/"+MGnify_acc[:13]+"/"+MGnify_acc
-                    print(genome_dir_path)
+                    print("Genomes directory:  ",genome_dir_path)
                     if os.path.isdir(genome_dir_path):
                         pan_genomes_dir = os.path.join(genome_dir_path,"pan-genome")
                         genome_dir = os.path.join(genome_dir_path,"genome")
                         if os.path.isdir(pan_genomes_dir):
                             pan_genome_file = os.path.join(pan_genomes_dir, "pan-genome.faa")
-                            print(pan_genome_file)
+                            print("Pan genome file: ",pan_genome_file)
                             output_file = os.path.join(d_dir, MGnify_acc+"_pg.faa")
                             dest = shutil.copy(pan_genome_file, output_file)
                             genome_file = os.path.join(genome_dir, MGnify_acc+".faa")

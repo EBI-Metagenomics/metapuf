@@ -75,7 +75,7 @@ def main(argv=None):
         for file in os.listdir(query_sig):
             if file.endswith(".csv"):
                 unique=set()
-                basename = (file.split(".")[0]).strip()
+                basename = os.path.splitext(file)
                 pan_genome_dir = os.path.join(query_sig, basename)
                 contig_protein = os.path.join(args.query_dir, basename+".faa")
                 all_protein_file=os.path.join(pan_genome_dir, "all_"+basename+".faa")

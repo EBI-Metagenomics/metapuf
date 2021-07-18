@@ -49,7 +49,6 @@ def get_genomes_from_ftp(species_names: list,  file_name:str, d_dir: str):
         print(sp_name)
         #ftp_dir_path should be changed to the location of uhgg_catalogue
         ftp_dir_path = "./human-gut/v1.0/uhgg_catalogue"
-        # ftp_dir_path ="/Users/kaurs/Desktop/project_files/ERP126326"
         data = pd.read_csv(file_name,  dtype=str, sep='\t')
         for i in range(len(data)):
             if sp_name == data['Species_rep'][i]:

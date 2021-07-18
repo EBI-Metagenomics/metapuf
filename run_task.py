@@ -47,7 +47,7 @@ def main(argv=None):
         for file in os.listdir(args.query_dir):
             if (file.endswith(".fasta")) or (file.endswith(".fasta.gz")) or (file.endswith(".fa")):
                 query_name = os.path.join(args.query_dir, file)
-                basename = file.split(".")[0]
+                basename = os.path.splitext(file)[0]
                 out_query= os.path.join(query_sig, basename+".sig")
                 if not os.path.isfile(out_query):
                     sm.sourmash_sig(query_name, out_query, args.k_size, args.scale)
@@ -58,8 +58,9 @@ def main(argv=None):
             print("signature index file is present")
             index_file = (glob.glob(args.ref_dir + "/**/*.sbt.json", recursive = True)[0])
             for file in os.listdir(query_sig):
+                # file_name = os.path.splitext(file)[0]
                 q_file = os.path.join(query_sig, file)
-                if q_file.endswith(".sig"):
+                if file.endswith(".sig"):
                     sm.sourmash_gather(query_sig, args.k_size, q_file, index_file)
         else:
             genomes_list_len = len(os.listdir(args.ref_dir))
@@ -68,14 +69,15 @@ def main(argv=None):
             sm.signature_index(args.k_size, str(genomes_list_len), args.ref_dir)
             for file in os.listdir(query_sig):
                 q_file = os.path.join(query_sig, file)
-                if q_file.endswith(".sig"):
+                if file.endswith(".sig"):
                     sm.sourmash_gather(query_sig, args.k_size, q_file, index_file)
         #working with .csv files
         genome_path = input ("Enter the source of genomes metadata as FTP_data or EBI_internal: ")
         for file in os.listdir(query_sig):
             if file.endswith(".csv"):
                 unique=set()
-                basename = os.path.splitext(file)
+                basename = os.path.splitext(file)[0]
+                print("line 80 ", basename)
                 pan_genome_dir = os.path.join(query_sig, basename)
                 contig_protein = os.path.join(args.query_dir, basename+".faa")
                 all_protein_file=os.path.join(pan_genome_dir, "all_"+basename+".faa")

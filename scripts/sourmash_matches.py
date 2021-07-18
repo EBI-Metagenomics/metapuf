@@ -37,7 +37,9 @@ def sourmash_gather(w_dir: str, k_size: str, query: str, index_file: str):
     :param query: file path of the query signature file
     :param index_file: file path for index of all reference genomes
     """
-    csv_out = os.path.join(w_dir, query+".csv")
-    sm_out = os.path.join(w_dir, query+".sm")
+    query_name = os.path.splitext(query)
+    print(query_name)
+    csv_out = os.path.join(w_dir, query_name[0]+".csv")
+    sm_out = os.path.join(w_dir, query_name[0]+".sm")
     cmd_gather = "  ".join(["sourmash gather -k ", k_size, query, index_file, " -o ", csv_out , " > ", sm_out])
     subprocess.call(cmd_gather, shell=True)

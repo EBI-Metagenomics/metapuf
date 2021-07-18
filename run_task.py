@@ -58,7 +58,6 @@ def main(argv=None):
             print("signature index file is present")
             index_file = (glob.glob(args.ref_dir + "/**/*.sbt.json", recursive = True)[0])
             for file in os.listdir(query_sig):
-                # file_name = os.path.splitext(file)[0]
                 q_file = os.path.join(query_sig, file)
                 if file.endswith(".sig"):
                     sm.sourmash_gather(query_sig, args.k_size, q_file, index_file)
@@ -77,12 +76,11 @@ def main(argv=None):
             if file.endswith(".csv"):
                 unique=set()
                 basename = os.path.splitext(file)[0]
-                print("line 80 ", basename)
                 pan_genome_dir = os.path.join(query_sig, basename)
                 contig_protein = os.path.join(args.query_dir, basename+".faa")
                 all_protein_file=os.path.join(pan_genome_dir, "all_"+basename+".faa")
                 concatenated_file = os.path.join(args.query_dir, "completed_"+basename+".faa")
-                print("This is the directory with uhgg matches ", pan_genome_dir )
+                print("This is the folder with uhgg matches ", pan_genome_dir )
                 if not os.path.isdir(pan_genome_dir):
                     p=subprocess.Popen(' '.join(['mkdir', pan_genome_dir]), shell = True)
                 try:

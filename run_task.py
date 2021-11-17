@@ -29,6 +29,8 @@ def main(argv=None):
     try:
         parser = ArgumentParser(
             description='Generate protein sequence datanase')
+        parser.add_argument('--source',  type=str, required=True,
+                            help='enter the source of genomes metadata as FTP_data or EBI_internal')
         parser.add_argument('--ref_dir',  type=dir_path, required=True,
                             help='full path of the directory with all the reference signatures')
         parser.add_argument('--query_dir',  type=dir_path, required=True,
@@ -71,7 +73,7 @@ def main(argv=None):
                 if file.endswith(".sig"):
                     sm.sourmash_gather(query_sig, args.k_size, q_file, index_file)
         #working with .csv files
-        genome_path = input ("Enter the source of genomes metadata as FTP_data or EBI_internal: ")
+        genome_path = args.source
         for file in os.listdir(query_sig):
             if file.endswith(".csv"):
                 unique=set()
@@ -95,7 +97,7 @@ def main(argv=None):
                     elif genome_path == "EBI_internal":
                         gm.get_genomes_from_ebi(unique, args.metadata, pan_genome_dir)
                     else:
-                        print("Genome metadata not found")
+                        print("Genome metadata not found. Please enter the correct source")
                     if not os.path.isfile(all_protein_file):
                         gm.concat_proteins(pan_genome_dir)
                     if not os.path.isfile(contig_protein):

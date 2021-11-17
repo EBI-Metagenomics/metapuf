@@ -73,7 +73,7 @@ def main(argv=None):
                 if file.endswith(".sig"):
                     sm.sourmash_gather(query_sig, args.k_size, q_file, index_file)
         #working with .csv files
-        genome_path = args.source
+        genome_source = args.source
         for file in os.listdir(query_sig):
             if file.endswith(".csv"):
                 unique=set()
@@ -91,10 +91,10 @@ def main(argv=None):
                         gen_name = match.split(".")[0]
                         unique.add(gen_name)
                     print(" UHGG matches",unique)
-                    if genome_path == "FTP_data":
+                    if genome_source == "FTP_data":
                         print("collecting metadata from ftp")
                         gm.get_genomes_from_ftp(unique, args.metadata, pan_genome_dir)
-                    elif genome_path == "EBI_internal":
+                    elif genome_source == "EBI_internal":
                         gm.get_genomes_from_ebi(unique, args.metadata, pan_genome_dir)
                     else:
                         print("Genome metadata not found. Please enter the correct source")

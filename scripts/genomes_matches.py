@@ -26,7 +26,7 @@ def gen_match_list(f_input: str, w_dir: str) -> list:
     unique=set()
     match_dir ={}
     for i in range(len(data)):
-        if round(data["f_match"][i], 2) >=0.30:
+        if round(data["f_match"][i], 2) >=0.10:
             unique.add(data["name"][i])
             name_list = list(unique)
     if len(unique) >= 1:
@@ -49,7 +49,7 @@ def get_genomes_from_ftp(species_names: list,  file_name:str, d_dir: str):
         print(sp_name)
         #ftp_dir_path should be changed to the location of uhgg_catalogue
         ftp_dir_path = "./human-gut/v1.0/uhgg_catalogue"
-        data = pd.read_csv(file_name,  dtype=str, sep='\t')
+        data = pd.read_csv(file_name,  dtype=str, sep=',')
         for i in range(len(data)):
             if sp_name == data['Species_rep'][i]:
                 if not sp_name in uniq_sp_name:
@@ -58,21 +58,14 @@ def get_genomes_from_ftp(species_names: list,  file_name:str, d_dir: str):
                     genome_dir_path = ftp_dir_path+"/"+MGnify_acc[:13]+"/"+MGnify_acc
                     print("Genomes directory:  ",genome_dir_path)
                     if os.path.isdir(genome_dir_path):
-                        pan_genomes_dir = os.path.join(genome_dir_path,"pan-genome")
+                        # pan_genomes_dir = os.path.join(genome_dir_path,"pan-genome")
                         genome_dir = os.path.join(genome_dir_path,"genome")
-                        if os.path.isdir(pan_genomes_dir):
-                            pan_genome_file = os.path.join(pan_genomes_dir, "pan-genome.faa")
-                            print("Pan genome file: ",pan_genome_file)
-                            output_file = os.path.join(d_dir, MGnify_acc+"_pg.faa")
-                            dest = shutil.copy(pan_genome_file, output_file)
+                        if os.path.isdir(genome_dir):
                             genome_file = os.path.join(genome_dir, MGnify_acc+".faa")
-                            out_file = os.path.join(d_dir, MGnify_acc+"_sp.faa")
+                            out_file = os.path.join(d_dir, MGnify_acc+".faa")
                             dest_file = shutil.copy(genome_file, out_file)
                         else:
-                            if os.path.isdir(genome_dir):
-                                protein_file = os.path.join(genome_dir, MGnify_acc+".faa")
-                                output_file = os.path.join(d_dir, MGnify_acc+".faa")
-                                dest = shutil.copy(protein_file, output_file)
+                            print("Genomes files missing!")
 def get_genomes_from_ebi(species_names: list,  file_name:str, d_dir: str):
     """
     copy genomes from EBI filesystem
@@ -88,22 +81,15 @@ def get_genomes_from_ebi(species_names: list,  file_name:str, d_dir: str):
                 line = line.rstrip('\n')
                 species_name = (line.split("/")[8:9][0]).strip()
                 genome_name = ((line.split("/")[-1]).split(".")[0]).strip()
-                if sp_name == species_name:
+                if sp_name == genome_name:
                     if not sp_name in distinct_sp_name:
                         distinct_sp_name.add(sp_name)
-                        src_dir = "/".join(line.split("/")[:9])
-                        roary_dir = os.path.join(src_dir,"roary")
-                        if os.path.isdir(roary_dir):
-                            print("copying pan-genome")
-                            pan_protein_file = os.path.join(roary_dir, "pan_genome_reference.faa")
-                            output_file = os.path.join(d_dir, species_name+"_pg.faa")
-                            dest = shutil.copy(pan_protein_file, output_file)
-                if ((sp_name == species_name) and (species_name == genome_name)):
-                    species_protein_path = line.split(".")[0]+"_prokka"
-                    protein_file = os.path.join(species_protein_path, species_name+".faa")
-                    sp_outfile = os.path.join(d_dir, species_name+"_sp.faa")
-                    print("copying matching species_rep genomes")
-                    dest1 = shutil.copy(protein_file, sp_outfile)
+                        species_protein_path = line.split(".")[0]+"_prokka"
+                        print(species_protein_path)
+                        if os.path.isdir(species_protein_path):
+                            protein_file = os.path.join(species_protein_path, species_name+".faa")
+                            sp_outfile = os.path.join(d_dir, species_name+".faa")
+                            dest1 = shutil.copy(protein_file, sp_outfile)
 
 def contig_prod(c_dir: str, assembly: str, sm_proteins: str):
     """
@@ -114,7 +100,7 @@ def contig_prod(c_dir: str, assembly: str, sm_proteins: str):
     """
     os.chdir(c_dir)
     for file in os.listdir(c_dir):
-        contig_file_name = (file.split(".")[0]).strip()
+        contig_file_name = os.path.splitext(file)[0]
         if (contig_file_name == assembly) and (file.endswith(".fa") or file.endswith(".fasta")):
             file_name = os.path.join(c_dir, file)
             cmd_prod = "  ".join(["prodigal -p meta -a ", contig_file_name+".faa", " -c -d ", contig_file_name+".fna", " -m -f gff -o ", contig_file_name+".gff"," -i ", file_name])

@@ -29,6 +29,8 @@ def main(argv=None):
     try:
         parser = ArgumentParser(
             description='Generate protein sequence datanase')
+        parser.add_argument('--threshold',  type=float, required=True,
+                            help='enter a float value, like 0.10 which restrict the sourmash matches between query and target')
         parser.add_argument('--source',  type=str, required=True,
                             help='enter the source of genomes metadata as FTP_data or EBI_internal')
         parser.add_argument('--ref_dir',  type=dir_path, required=True,
@@ -86,7 +88,7 @@ def main(argv=None):
                 if not os.path.isdir(pan_genome_dir):
                     p=subprocess.Popen(' '.join(['mkdir', pan_genome_dir]), shell = True)
                 try:
-                    matched_sp_names = gm.gen_match_list(file, query_sig)
+                    matched_sp_names = gm.gen_match_list(args.threshold, file, query_sig)
                     for match in matched_sp_names:
                         gen_name = match.split(".")[0]
                         unique.add(gen_name)
@@ -114,3 +116,4 @@ def main(argv=None):
 
 if __name__ == "__main__":
     sys.exit(main())
+

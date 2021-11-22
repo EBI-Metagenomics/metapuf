@@ -12,7 +12,7 @@ from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 import pandas as pd
 
-def gen_match_list(f_input: str, w_dir: str) -> list:
+def gen_match_list(sm_match: float,f_input: str, w_dir: str) -> list:
     """
     Generates contigs names to search in database
     :param f_input:  input sample file which is a .csv file
@@ -26,7 +26,7 @@ def gen_match_list(f_input: str, w_dir: str) -> list:
     unique=set()
     match_dir ={}
     for i in range(len(data)):
-        if round(data["f_match"][i], 2) >=0.10:
+        if round(data["f_match"][i], 2) >=sm_match:
             unique.add(data["name"][i])
             name_list = list(unique)
     if len(unique) >= 1:

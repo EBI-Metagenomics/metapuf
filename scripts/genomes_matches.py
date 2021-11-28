@@ -91,7 +91,7 @@ def get_genomes_from_ebi(species_names: list,  file_name:str, d_dir: str):
                             sp_outfile = os.path.join(d_dir, species_name+".faa")
                             dest1 = shutil.copy(protein_file, sp_outfile)
 
-def contig_prod(c_dir: str, assembly: str, sm_proteins: str):
+def contig_prod(c_dir: str, assembly: str):
     """
     predict ORFs from contig assemblies
     :param c_dir:  path of directory containing contigs
@@ -105,17 +105,7 @@ def contig_prod(c_dir: str, assembly: str, sm_proteins: str):
             file_name = os.path.join(c_dir, file)
             cmd_prod = "  ".join(["prodigal -p meta -a ", contig_file_name+".faa", " -c -d ", contig_file_name+".fna", " -m -f gff -o ", contig_file_name+".gff"," -i ", file_name])
             subprocess.call(cmd_prod, shell=True)
-            with open(sm_proteins, 'r') as fp:
-                data = fp.read()
-            contig_protein = os.path.join(c_dir, contig_file_name+".faa")
-            final_file = os.path.join(c_dir, "completed_"+contig_file_name+".faa")
-            with open(contig_protein,'r') as fc:
-                data2 = fc.read()
-            data += "\n"
-            data += data2
-            with open(final_file,'a') as fout:
-                fout.write(data)
-
+        
 def concat_proteins(protein_dir: str):
     """
     Concatenate all the matching protein files from UHGG catalogue

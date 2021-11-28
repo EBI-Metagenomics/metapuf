@@ -104,8 +104,15 @@ def main(argv=None):
                         gm.concat_proteins(pan_genome_dir)
                     if not os.path.isfile(contig_protein):
                         gm.contig_prod(args.query_dir, basename, all_protein_file)
-                    if os.path.isfile(concatenated_file):
-                        gm.uniq_proteins(args.query_dir, basename)
+                    with open(all_protein_file, 'r') as fp:
+                        data = fp.read()
+                    with open(contig_protein,'r') as fc:
+                        data2 = fc.read()
+                    data += "\n"
+                    data += data2
+                    with open(concatenated_file,'a') as fout:
+                        fout.write(data)
+                    gm.uniq_proteins(args.query_dir, basename)
                 except Exception:
                     continue
         print('runtime is {} seconds'.format(time.time() - starttime))

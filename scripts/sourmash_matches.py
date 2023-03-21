@@ -6,8 +6,7 @@ import subprocess
 import glob
 import time
 
-
-def sourmash_sig(file_name: str, out_file: str, k_size: str, scale: str):
+def sourmash_sig(in_file: str, out_file:str, k_size: str, scale: str):
     """
     Compute sourmash signatures for the .fasta files
     :param file_name: path of the file
@@ -16,7 +15,8 @@ def sourmash_sig(file_name: str, out_file: str, k_size: str, scale: str):
     :param scale: scaling factor, the default value is 1000
 
     """
-    cmd_sig = "  ".join(["sourmash compute -k ", k_size, " --scaled ", scale, " --track-abundance --name-from-first -o ", out_file, file_name])
+    cmd_sig = "  ".join(["sourmash sketch dna -p  k=", k_size,",scaled=",scale,  in_file, "-o ", out_file])
+    print(cmd_sig)
     subprocess.call(cmd_sig, shell=True)
 
 def signature_index(k_size: str, file_list_len: str, sig_dir: str):
@@ -26,7 +26,8 @@ def signature_index(k_size: str, file_list_len: str, sig_dir: str):
     :param file_list_len: number of files in signature directory
     :param sig_dir: path of the signature directories
     """
-    cmd_index = "  ".join(["sourmash index  -k ", k_size, " genome_index_"+str(file_list_len) , " --traverse-directory  ", sig_dir])
+    index_file = os.path.join(sig_dir, "genome_index_"+str(file_list_len)+".sbt.json")
+    cmd_index = "  ".join(["sourmash index  -k ", k_size, index_file , sig_dir])
     subprocess.call(cmd_index, shell=True)
 
 def sourmash_gather(w_dir: str, k_size: str, query: str, index_file: str):

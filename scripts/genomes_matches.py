@@ -36,6 +36,33 @@ def gen_match_list(sm_match: float,f_input: str, w_dir: str) -> list:
     else:
         raise Exception("No matches found")
 
+def get_genomes_from_wastewater_ftp(species_names: list,  file_name:str, d_dir: str):
+    """
+    copy genomes from ftp location
+    :param species_names:  list of mtches found
+    :param file_name: absolute path for the metadata file
+    :param d_dir: path of the destination directory
+    """
+    uniq_sp_name=set()
+    for item in species_names:
+        sp_name = (item.split('.')[0]).strip()
+        print(sp_name)
+        #ftp_dir_path should be changed to the location of catalogue of interest
+        ftp_dir_path = "./Midas/Catalogue"
+        data = pd.read_excel(file_name)
+        for i in range(len(data)):
+            if sp_name == data['MAG'][i]:
+                if not sp_name in uniq_sp_name:
+                    uniq_sp_name.add(sp_name)
+                    genome_dir_path = ftp_dir_path+"/"+sp_name
+                    print("Genomes directory:  ",genome_dir_path)
+                    for file in genome_dir_path:
+                        if the file.endswith(".faa"):
+                            out_file = os.path.join(d_dir, sp_name+".faa")
+                            dest_file = shutil.copy(genome_file, out_file)
+                        else:
+                            print("Genomes files missing!")
+
 def get_genomes_from_ftp(species_names: list,  file_name:str, d_dir: str):
     """
     copy genomes from ftp location
